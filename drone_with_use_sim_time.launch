@@ -7,15 +7,20 @@
   <!-- Choose visualization -->
   <arg name="rviz" default="true" />
   <arg name="rtabmapviz" default="false" />
+	
+  <!-- sim time for convenience, if playing a rosbag -->
+  <arg name="use_sim_time"            default="false"/>
+  <param if="$(arg use_sim_time)" name="use_sim_time" value="true"/>
   
-  <!-- Creating the transform tree that combines the LIDAR and the Realsense -->
+  <!-- Creating the transform tree that combines the LIDAR and the Realsense branches -->
+  <!-- only needs to use the tf when use_sim_time is false -->
 	
   <!-- tf to link the base_footprint to the laser -->
-  <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_laser" 
+  <node unless="$(arg use_sim_time)" pkg="tf" type="static_transform_publisher" name="base_footprint_to_laser" 
     args="0.0 0.0 0.0 0.0 0.0 0.0 /base_footprint /laser 100" />
 
   <!-- tf to link the base_footprint to the camera -->
-  <node  pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera_link" 
+  <node unless="$(arg use_sim_time)" pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera_link" 
     args="0.0 0.0 1.0 3.14159 0.0 0.0 /base_footprint /camera_link 100" />
 
   
@@ -29,6 +34,12 @@
 	  
      <param name="frame_id"        type="string" value="base_footprint"/>   <!-- The frame attached to the mobile base. -->
      
+		 <remap from="rgb/image"       to="/camera/color/image_raw"/> <!-- RGB/Mono image. Should be rectified when subscribe_depth is true. Not required if parameter subscribe_stereo is true (use left/image_rect instead). -->
+     <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/> <!-- Registered depth image. -->
+     <remap from="rgb/camera_info" to="/camera/color/camera_info"/> <!-- RGB camera metadata. Not required if parameter subscribe_stereo is true (use left/camera_info instead). -->
+  	
+     <param name="rgb/image_transport"   type="string" value="compressed"/>
+     <param name="depth/image_transport" type="string" value="compressedDepth"/>  
 	  
      <!-- ICP parameters -->
      <param name="Icp/PointToPlane"  type="string" value="true"/> <!-- "Use point to plane ICP." -->
@@ -71,8 +82,20 @@
       <param name="subscribe_depth" type="bool" value="true"/> <!-- Subscribe to depth image -->
       <param name="subscribe_rgbd"  type="bool" value="true"/> <!-- Subsribe to rgbd_image topic. -->
       <param name="subscribe_scan"  type="bool" value="true"/> <!-- Subscribe to laser scan -->
-	
-      <remap from="scan" to="/scan"/>
+			
+			<param name="wait_for_transform" type="bool" value="true"/> <!-- Wait duration for transform when a tf transform is not still available. -->
+			<remap from="rgb/image"       to="/camera/color/image_raw"/> <!-- RGB/Mono image. Should be rectified when subscribe_depth is true. Not required if parameter subscribe_stereo is true (use left/image_rect instead). -->
+      <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/> <!-- Registered depth image. -->
+      <remap from="rgb/camera_info" to="/camera/color/camera_info"/> <!-- RGB camera metadata. Not required if parameter subscribe_stereo is true (use left/camera_info instead). -->
+  	
+	    <param name="rgb/image_transport"   type="string" value="compressed"/>
+	    <param name="depth/image_transport" type="string" value="compressedDepth"/>  
+			
+	    <param name="odom_frame_id"            type="string" value="odom"/> <!-- The frame attached to odometry. If empty, rtabmap will subscribe to odom topic to get odometry. If set, odometry is got from tf (in this case, a covariance of 1 is used). -->
+	    <param name="odom_tf_linear_variance"  type="double" value="0.001"/>  
+	  	<param name="odom_tf_angular_variance" type="double" value="0.001"/>
+      
+			<remap from="scan" to="/scan"/>
 
       <remap from="rgbd_image" to="rgbd_image"/> <!-- RGB-D synchronized image, only when subscribe_rgbd is true. -->
 
@@ -102,6 +125,8 @@
       <param name="frame_id"            type="string" value="base_footprint"/>
 
       <remap from="scan"            to="/scan"/>
+			
+			<param name="odom_frame_id" type="string" value="hector_map"/> <!-- The frame attached to odometry. If empty, rtabmap will subscribe to odom topic to get odometry. If set, odometry is got from tf (in this case, a covariance of 1 is used). -->
       <remap from="odom" to="/scanmatch_odom"/>
       <param name="subscribe_odom_info" type="bool" value="true"/> <!-- Subscribe to odometry info messages -->
     </node>
