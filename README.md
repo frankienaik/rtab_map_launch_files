@@ -4,22 +4,22 @@ Above is the RTAB-Map launch files used to integrate the LIDAR and the Realsense
   
 This launch file has to be launched after launching the LIDAR and the Realsense Camera. They will thus feed the information into the launch file for the RTAB-Map, allowing it to perform SLAM.  
 
-The output of the RTAB-Map is as shown below:  
-
-Dark with additional features
+The output of the RTAB-Map in different conditions are as shown below:  
+## Dark with additional features
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_additional_feats(1).png)
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_additional_feats.png)    
 
-Lit with additional features
+## Lit with additional features
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/lit_w_additional_feats.png)  
   
-Dark with minimal features
+## Dark with minimal features
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_min_feats(1).png)
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_min_feats.png)  
   
-Lit with minimal features
+## Lit with minimal features
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_additional_feats(1).png)
 
+# How to Launch
 
 
 
