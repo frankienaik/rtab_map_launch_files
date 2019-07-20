@@ -19,8 +19,12 @@ The output of the RTAB-Map in different conditions are as shown below:
 ### Lit with minimal features
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_additional_feats(1).png)
 
-# How to Launch
+## How to Launch
+1) Run the RpLIDAR and the Realsense Camera  
+2) Run this launch file
 
+## Potential further development
+1) Create a python script that reads the video and rewrite the data when a crack is detected. As it is a RGB-D data, we can up the R value such that a red bounding box can be created.
 
 
 
