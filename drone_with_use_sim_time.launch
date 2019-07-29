@@ -6,6 +6,10 @@
   <!-- RTAB-Map parameters can be found in https://github.com/introlab/rtabmap/blob/master/corelib/include/rtabmap/core/Parameters.h
 		and http://wiki.ros.org/rtabmap_ros -->
 	
+	<!-- Choose odom -->
+	<arg name ="icp" default="false" /> <!-- use icp -->
+	
+	
   <!-- Choose visualization -->
   <arg name="rviz" default="true" /> <!-- use RVIZ -->
   <arg name="rtabmapviz" default="false" /> <!-- use RTAB-MapVIZ -->
@@ -25,11 +29,17 @@
   <node unless="$(arg use_sim_time)" pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera_link" 
     args="0.0 0.0 1.0 3.14159 0.0 0.0 /base_footprint /camera_link 100" />
 
+	<!-- use rtabmap's visual odometry to generate odometry for us -->
+	    <!-- Odometry -->
+  <node unless="$(arg icp)" pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" output="screen">
+		 <param name="subscribe_rgbd" type="bool"   value="true"/>
+     <param name="frame_id"       type="string" value="base_footprint"/>
+     <remap from="rgbd_image" to="rgbd_image"/>
+  </node>
   
   <!-- use rtabmap's icp odometry to generate odometry for us -->
-  <node pkg="rtabmap_ros" type="icp_odometry" name="icp_odometry" output="screen" >
-
-     <remap from="scan"      to="/scan"/>
+  <node if="$(arg icp)" pkg="rtabmap_ros" type="icp_odometry" name="icp_odometry" output="screen" >
+		 <remap from="scan"      to="/scan"/>
 
      <remap from="odom"      to="/scanmatch_odom"/> 
      <remap from="odom_info"      to="/rtabmap/odom_info"/> <!-- Odometry info. Required if parameter subscribe_odom_info is true. -->
@@ -39,11 +49,7 @@
      <remap from="rgb/image"       to="/camera/color/image_raw"/> <!-- RGB/Mono image. Should be rectified when subscribe_depth is true. Not required if parameter subscribe_stereo is true (use left/image_rect instead). -->
      <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/> <!-- Registered depth image. -->
      <remap from="rgb/camera_info" to="/camera/color/camera_info"/> <!-- RGB camera metadata. Not required if parameter subscribe_stereo is true (use left/camera_info instead). -->
-  	
-<!--
-     <param name="rgb/image_transport"   type="string" value="compressed"/>
-     <param name="depth/image_transport" type="string" value="compressedDepth"/>  
--->	  
+
      <!-- ICP parameters -->
      <param name="Icp/PointToPlane"  type="string" value="true"/> <!-- "Use point to plane ICP." -->
      <param name="Icp/VoxelSize"     type="string" value="0.05"/> <!-- "Uniform sampling voxel size (0=disabled)." -->
@@ -78,14 +84,16 @@
 	    
     <!-- Should be true for not synchronized camera topics 
            (e.g., false for kinectv2, zed, realsense, true for xtion, kinect360)-->
-      <param name="approx_sync"       value="true"/>  <!-- Use approximate time synchronization of input messages. If false, note that the odometry input must have also exactly the same timestamps than the input images. -->
-    </node>
+			<param if="$(arg icp)" name="approx_sync"       value="true"/>
+      <param unless="$(arg icp)" name="approx_sync"       value="false"/>  <!-- Use approximate time synchronization of input messages. If false, note that the odometry input must have also exactly the same timestamps than the input images. -->
+    <!-- set to false for rtabmap node to make sure it uses the odom computed with the same rgbd_image topic. -->
+		</node>
     
     <!-- SLAM -->
     <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
       <param name="frame_id" type="string" value="base_footprint"/>
 	
-      <param name="subscribe_depth" type="bool" value="true"/> <!-- Subscribe to depth image -->
+      <param name="subscribe_depth" type="bool" value="false"/> <!-- Subscribe to depth image -->
       <param name="subscribe_rgbd"  type="bool" value="true"/> <!-- Subsribe to rgbd_image topic. -->
       <param name="subscribe_scan"  type="bool" value="true"/> <!-- Subscribe to laser scan -->
 			
@@ -113,7 +121,7 @@
 	
       <!-- RTAB-Map's parameters: do "rosrun rtabmap rtabmap (double-dash)params" to see the list of available parameters. -->
       <param name="Reg/Strategy"       type="string" value="1"/>    <!-- 0=Visual, 1=ICP, 2=Visual+ICP -->
-      <param name="Reg/Force3DoF"      type="string" value="true"/> <!-- "Force 3 degrees-of-freedom transform (3Dof: x,y and yaw). Parameters z, roll and pitch will be set to 0." -->
+      <param name="Reg/Force3DoF"      type="string" value="false"/> <!-- "Force 3 degrees-of-freedom transform (3Dof: x,y and yaw). Parameters z, roll and pitch will be set to 0." -->
       <param name="RGBD/ProximityBySpace"      type="string" value="false"/> <!-- "Detection over locations (in Working Memory) near in space." -->
       
       <param name="RGBD/NeighborLinkRefining" type="string" value="true"/> <!-- uFormat("When a new node is added to the graph, the transformation of its neighbor link to the previous node is refined using registration approach selected (%s).", kRegStrategy().c_str()) -->
