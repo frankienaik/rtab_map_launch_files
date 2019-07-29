@@ -1,3 +1,4 @@
+
 <launch>
   
   <!-- this launch coed uses icp_odometry for its odometry -->
@@ -6,17 +7,8 @@
 		and http://wiki.ros.org/rtabmap_ros -->
 	
   <!-- Choose visualization -->
-  <arg name="rviz" default="true" />
-  <arg name="rtabmapviz" default="false" />
-	
-  <!-- this has to be tested -->
-  <!-- might only be able to do one mode at a time -->
-  <!-- starting with mapping mode then ending with localization mode -->
-  <!-- this might not be required. it is already in SLAM mode without the localization -->
-  <!-- Localization-only mode -->
-  <arg name="localization"      default="false"/>
-  <arg     if="$(arg localization)" name="rtabmap_args"  default=""/>
-  <arg unless="$(arg localization)" name="rtabmap_args"  default="--delete_db_on_start"/>
+  <arg name="rviz" default="true" /> <!-- use RVIZ -->
+  <arg name="rtabmapviz" default="false" /> <!-- use RTAB-MapVIZ -->
 	
   <!-- sim time for convenience, if playing a rosbag -->
   <arg name="use_sim_time"            default="false"/>
@@ -48,9 +40,10 @@
      <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/> <!-- Registered depth image. -->
      <remap from="rgb/camera_info" to="/camera/color/camera_info"/> <!-- RGB camera metadata. Not required if parameter subscribe_stereo is true (use left/camera_info instead). -->
   	
+<!--
      <param name="rgb/image_transport"   type="string" value="compressed"/>
      <param name="depth/image_transport" type="string" value="compressedDepth"/>  
-	  
+-->	  
      <!-- ICP parameters -->
      <param name="Icp/PointToPlane"  type="string" value="true"/> <!-- "Use point to plane ICP." -->
      <param name="Icp/VoxelSize"     type="string" value="0.05"/> <!-- "Uniform sampling voxel size (0=disabled)." -->
@@ -76,10 +69,13 @@
       <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/> <!-- Registered depth image. -->
       <remap from="rgb/camera_info" to="/camera/color/camera_info"/> <!-- RGB camera metadata. Not required if parameter subscribe_stereo is true (use left/camera_info instead). -->
       
+<!--
       <param name="rgb/image_transport"   type="string" value="compressed"/>
       <param name="depth/image_transport" type="string" value="compressedDepth"/>
+-->
       <remap from="rgbd_image"      to="rgbd_image"/> <!-- RGB-D synchronized image, only when subscribe_rgbd is true. -->
-    
+
+	    
     <!-- Should be true for not synchronized camera topics 
            (e.g., false for kinectv2, zed, realsense, true for xtion, kinect360)-->
       <param name="approx_sync"       value="true"/>  <!-- Use approximate time synchronization of input messages. If false, note that the odometry input must have also exactly the same timestamps than the input images. -->
@@ -97,10 +93,11 @@
       <remap from="rgb/image"       to="/camera/color/image_raw"/> <!-- RGB/Mono image. Should be rectified when subscribe_depth is true. Not required if parameter subscribe_stereo is true (use left/image_rect instead). -->
       <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/> <!-- Registered depth image. -->
       <remap from="rgb/camera_info" to="/camera/color/camera_info"/> <!-- RGB camera metadata. Not required if parameter subscribe_stereo is true (use left/camera_info instead). -->
-  	
+			
+<!--
       <param name="rgb/image_transport"   type="string" value="compressed"/>	    
       <param name="depth/image_transport" type="string" value="compressedDepth"/>  
-			
+-->			
       <param name="odom_frame_id"            type="string" value="odom"/> <!-- The frame attached to odometry. If empty, rtabmap will subscribe to odom topic to get odometry. If set, odometry is got from tf (in this case, a covariance of 1 is used). -->
       <param name="odom_tf_linear_variance"  type="double" value="0.001"/>  
       <param name="odom_tf_angular_variance" type="double" value="0.001"/>
@@ -125,11 +122,7 @@
       <param name="RGBD/OptimizeFromGraphEnd" type="string" value="false"/> <!-- "Optimize graph from the newest node. If false, the graph is optimized from the oldest node of the current graph (this adds an overhead computation to detect to oldest node of the current graph, but it can be useful to preserve the map referential from the oldest node). Warning when set to false: when some nodes are transferred, the first referential of the local map may change, resulting in momentary changes in robot/map position (which are annoying in teleoperation)." -->
       <param name="Grid/FromDepth"            type="string" value="false"/> <!-- "Create occupancy grid from depth image(s), otherwise it is created from laser scan." -->
     	  
-      <!-- localization mode -->
-      <param     if="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="false"/> <!-- "SLAM mode, otherwise it is Localization mode." -->
-      <param unless="$(arg localization)" name="Mem/IncrementalMemory" type="string" value="true"/>
-      <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localization)"/>
-    </node>
+    </node>			
     
     <!-- Visualisation RTAB-Map -->
     <!-- uses rgbd_gui.ini -->
