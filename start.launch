@@ -3,7 +3,7 @@
 	<include file="$(find rplidar_ros)/launch/rplidar_a3.launch">
         </include>	
 
-  <include file="(find realsense2_camera)/launch/rs_camera.launch">
+  <include file="$(find realsense2_camera)/launch/shadow_camera.launch">
         <arg name="align_depth" value="true" />
         </include>
         
