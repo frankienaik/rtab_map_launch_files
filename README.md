@@ -7,7 +7,7 @@ P.S. : The topics (of the LIDAR and RGBD Camera) SHOULD be changed if LIDAR mode
 ## RTAB-Map slight explanation
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/rtabmap.PNG)
 ###### This image is taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf. It shows the block diagram of the ROS RTAB-Map node.
-##### Important poitns to note:
+##### Important points to note:
 1) Laser Scan (mine) or Point Cloud is optional. (just like the RTAB-Map HandHeld Mapping tutorial)
 2) The TF defines the position of the sensors in relation to the base of the robot.
 3) Odometry can be from any source (which can be 3DoF or 6DoF). For our case, it would be either the generated icp_odometry or rgbd_odometry.
