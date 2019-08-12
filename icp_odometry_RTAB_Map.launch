@@ -7,7 +7,7 @@
 		and http://wiki.ros.org/rtabmap_ros -->
 	
   <!-- Choose visualization -->
-  <arg name="rviz" default="true" /> <!-- use RVIZ -->
+  <arg name="rviz" default="false" /> <!-- use RVIZ -->
   <arg name="rtabmapviz" default="false" /> <!-- use RTAB-MapVIZ -->
 	
   <!-- sim time for convenience, if playing a rosbag -->
@@ -22,10 +22,6 @@
   <node unless="$(arg use_sim_time)" pkg="tf" type="static_transform_publisher" name="base_footprint_to_laser" 
     args="0.0 0.0 0.163 0.0 0.0 0.0 /base_footprint /laser 100" />
 
-<!--  
-  <node unless="$(arg use_sim_time)" pkg="tf" type="static_transform_publisher" name="camera_link_to_laser" 
-    args="0.0 0.20468 0.143 1.5707 0.0 0.0 /camera_link /laser 100" />  
--->
   <!-- tf to link the base_footprint to the camera -->
   <node unless="$(arg use_sim_time)" pkg="tf" type="static_transform_publisher" name="base_footprint_to_camera_link" 
     args="0.0 -0.20468 0.023 -1.5707 0.0 0.0 /base_footprint /camera_link 100" />
@@ -44,11 +40,7 @@
      <remap from="rgb/image"       to="/camera/color/image_raw"/> <!-- RGB/Mono image. Should be rectified when subscribe_depth is true. Not required if parameter subscribe_stereo is true (use left/image_rect instead). -->
      <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/> <!-- Registered depth image. -->
      <remap from="rgb/camera_info" to="/camera/color/camera_info"/> <!-- RGB camera metadata. Not required if parameter subscribe_stereo is true (use left/camera_info instead). -->
-  	
-<!--
-     <param name="rgb/image_transport"   type="string" value="compressed"/>
-     <param name="depth/image_transport" type="string" value="compressedDepth"/>  
--->	  
+
      <!-- ICP parameters -->
      <param name="Icp/PointToPlane"  type="string" value="false"/> <!-- "Use point to plane ICP." -->
      <param name="Icp/VoxelSize"     type="string" value="0.05"/> <!-- "Uniform sampling voxel size (0=disabled)." -->
@@ -65,6 +57,8 @@
      <param name="Odom/ResetCountdown"  type="string" value="0"/> <!-- "Automatically reset odometry after X consecutive images on which odometry cannot be computed (value=0 disables auto-reset)." -->
      <param name="Odom/ScanKeyFrameThr"  type="string" value="0.9"/> <!-- [Geometry] Create a new keyframe when the number of ICP inliers drops under this ratio of points in last frame's scan. Setting the value to 0 means that a keyframe is created for each processed frame." -->
      
+     <param name="Reg/Force3DoF"      type="string" value="false"/> 
+     
      
      <param name="Optimizer/Strategy" type="string" value="2"/>
   </node>
@@ -76,11 +70,7 @@
       <remap from="rgb/image"       to="/camera/color/image_raw"/> <!-- RGB/Mono image. Should be rectified when subscribe_depth is true. Not required if parameter subscribe_stereo is true (use left/image_rect instead). -->
       <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/> <!-- Registered depth image. -->
       <remap from="rgb/camera_info" to="/camera/color/camera_info"/> <!-- RGB camera metadata. Not required if parameter subscribe_stereo is true (use left/camera_info instead). -->
-      
-<!--
-      <param name="rgb/image_transport"   type="string" value="compressed"/>
-      <param name="depth/image_transport" type="string" value="compressedDepth"/>
--->
+
       <remap from="rgbd_image"      to="rgbd_image"/> <!-- RGB-D synchronized image, only when subscribe_rgbd is true. -->
 
 	    
@@ -101,11 +91,7 @@
       <remap from="rgb/image"       to="/camera/color/image_raw"/> <!-- RGB/Mono image. Should be rectified when subscribe_depth is true. Not required if parameter subscribe_stereo is true (use left/image_rect instead). -->
       <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/> <!-- Registered depth image. -->
       <remap from="rgb/camera_info" to="/camera/color/camera_info"/> <!-- RGB camera metadata. Not required if parameter subscribe_stereo is true (use left/camera_info instead). -->
-			
-<!--
-      <param name="rgb/image_transport"   type="string" value="compressed"/>	    
-      <param name="depth/image_transport" type="string" value="compressedDepth"/>  
--->			
+
       <param name="odom_frame_id"            type="string" value="odom"/> <!-- The frame attached to odometry. If empty, rtabmap will subscribe to odom topic to get odometry. If set, odometry is got from tf (in this case, a covariance of 1 is used). -->
       <param name="odom_tf_linear_variance"  type="double" value="0.001"/>  
       <param name="odom_tf_angular_variance" type="double" value="0.001"/>
