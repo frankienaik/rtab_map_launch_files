@@ -8,9 +8,9 @@ P.S. : The topics (of the LIDAR and RGBD Camera) SHOULD be changed if LIDAR mode
 
 
 
-### Setting up and launching
+## Setting up and launching
 
-Running RTAB-Map:
+#### Running RTAB-Map:
 1) The shadow_camera.launch file has to be placed inside $(realsense2_camera)/launch directory.
 2) The demo_frankie_mapping.rviz file has to be placed inside $(find rtabmap_ros)/launch/config directory.
 3) ```roslaunch start.launch``` to run the RPLIDAR and the Realsense Camera. 
@@ -19,39 +19,40 @@ Running RTAB-Map:
 6) If you want to record the mapping process...
 ```roslaunch data_recorder.launch``` (Do note that you can change the output_path of the db file and it only works with icp_odometry_RTAB_Map.launch as this is additional and not required in the project)
 
-Running the Replay File:
+#### Running the Replay File:
 1) ```roslaunch icp_odometry_RTAB_Map.launch use_sim_time:=true```
 2) ```rosrun image_view image_view image:=/camera/color/image_raw``` This is to view the camera video
 3) ```rosrun rtabmap_ros data_player _database:=~/.ros/output.db _frame_id:=base_footprint odom:=/odom scan:=/scan rgb/image:=camera/color/image_raw depth_registered/image:=/camera/aligned_depth_to_color/image_raw /rgb/camera_info:=/camera/color/camera_info --clock``` This is to view the mapping process
 
-# Results
+## Results
 The output of the RTAB-Map in different conditions are as shown below:  
 
-## Testing with manually controlled UGV
+### Testing with manually controlled UGV
 
-### Dark with additional features with ICP Odometry
+#### Dark with additional features with ICP Odometry
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_additional_feats(1).png)
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_additional_feats.png)    
 
-### Lit with additional features with ICP Odometry
+#### Lit with additional features with ICP Odometry
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/lit_w_additional_feats.png)  
   
-### Dark with minimal features with ICP Odometry
+#### Dark with minimal features with ICP Odometry
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_min_feats(1).png)
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_min_feats.png)  
   
-### Lit with minimal features with ICP Odometry
+#### Lit with minimal features with ICP Odometry
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_additional_feats(1).png)
 
-## Autonomous Flight with Drone
+### Autonomous Flight with Drone
 
-### with ICP Odometry
+#### with ICP Odometry
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/lit_w_additional_feats.png)  
 
-### with RGBD Odometry
+#### with RGBD Odometry
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_min_feats.png)  
 
 ## ICP Odometry vs RGBD Odometry
+
 ### ICP Odometry:
 - Capable of 3DOF(x, y, yaw), resulting in a mapping only in the x-y plane. This is so as our ICP Odometry is generated with the use of a 2D LIDAR, which does not include a z-axis. With a 3D LIDAR, it is possible to map in the x-y-z plane.
 - Not feature dependent.
@@ -62,14 +63,9 @@ The output of the RTAB-Map in different conditions are as shown below:
 
 #### ICP Odometry is more reliable and robust as compared to RGBD Odometry. It does not lose its odometry easily and is potentially able to map the x-y-z plane with a 3D LIDAR.
 
-## Potential further development
 
-Do note that suggestions here are based off my blackbox understanding of the crack detection software.
-1) Create a python script that reads the video and rewrite the data when a crack is detected. As it is a RGB-D data, we can increase the R value such that a red bounding box can be created. (It is not easy but it is a suggestion)
-2) On the flight path, we can change the data color to allow the user to know where a crack was detected.
 
 ## Important Variables in RTAB-Map
-
 - rgb/image
 - depth/image
 - rgb/camera_info
@@ -80,7 +76,6 @@ Do note that suggestions here are based off my blackbox understanding of the cra
 - frame_id
 
 ## Important Nodes in RTAB-Map Node
-
 1) rgbd_sync
 ```
 <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
@@ -176,9 +171,12 @@ Parameters in here can be changed. Important variables are these:
 <remap from="odom"            to="$(arg odom_topic)"/>
 ```
 
+## Potential further development
+Do note that suggestions here are based off my blackbox understanding of the crack detection software.
+1) Create a python script that reads the video and rewrite the data when a crack is detected. As it is a RGB-D data, we can increase the R value such that a red bounding box can be created. (It is not easy but it is a suggestion)
+2) On the flight path, we can change the data color to allow the user to know where a crack was detected.
 
 ## Related & Useful Links
-
 1) RTAB-Map parameters https://github.com/introlab/rtabmap/blob/master/corelib/include/rtabmap/core/Parameters.h and http://wiki.ros.org/rtabmap_ros 
 2) RTAB-Map as an Open-Source Lidar and Visual SLAM Library for Large-Scale and Long-Term Online Operation https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf
 3) RTAB-Map with LIDAR http://wiki.ros.org/rtabmap_ros/Tutorials/SetupOnYourRobot
