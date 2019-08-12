@@ -6,7 +6,7 @@ P.S. : The topics (of the LIDAR and RGBD Camera) SHOULD be changed if LIDAR mode
 
 ## RTAB-Map slight explanation
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/2d_3d.PNG)
-This image is taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf. It shows the block diagram of the ROS RTAB-Map node.
+###### This image is taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf. It shows the block diagram of the ROS RTAB-Map node.
 
 
 
