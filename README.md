@@ -4,6 +4,14 @@ Above is the RTAB-Map launch files used to integrate the LIDAR and the Realsense
   
 This launch file has to be launched after launching the LIDAR and the Realsense Camera. They will thus feed the information into the launch file for the RTAB-Map, allowing it to perform SLAM.  
 
+### Setting up to run
+
+1) The shadow_camera.launch file has to be placed inside $(realsense2_camera)/launch directory.
+2) Roslaunch start.launch to run the RPLIDAR and the Realsense Camera.
+3) Choose the odometry you wish to use. The two odometry available is RGBD Odometry and Iterative Closest Point (ICP) Odometry. If RGBD Odometry is to be used, roslaunch icp_odometry_RTAB_Map.launch. Else if ICP Odometry is to be used, roslaunch rgbd_odometry_RTAB_Map.launch. (Both launch files are very different, the icp_odometry_RTAB_Map.launch file is very short and simple, however, it can only run using simulation time or run the RTAB-Map using ICP Odometry. For rgbd_odometry_RTAB_Map.launch, the file is longer as it takes into account more variables, providing it with greater capabilities. Both ways work and it just depends on your personal coding style. I personally prefer the simpler and shorter one as it is more readable. However, it is possible to include both rgbd_odometry and icp_odometry in one single launch file.
+4) 
+
+
 The output of the RTAB-Map in different conditions are as shown below:  
 ### Dark with additional features
 ![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_additional_feats(1).png)
