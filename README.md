@@ -5,7 +5,7 @@ Above is the RTAB-Map launch files used to integrate the RPLidar and the Realsen
 P.S. : The topics (of the LIDAR and RGBD Camera) SHOULD be changed if LIDAR model and RGBD Camera model is different. Instructions below only took into account my hardwares.
 
 ## RTAB-Map slight explanation
-![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/2d_3d.PNG)
+![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/rtabmap.PNG)
 ###### This image is taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf. It shows the block diagram of the ROS RTAB-Map node.
 ##### Important poitns to note:
 1) Laser Scan (mine) or Point Cloud is optional. (just like the RTAB-Map HandHeld Mapping tutorial)
@@ -52,10 +52,10 @@ The output of the RTAB-Map in different conditions are as shown below:
 ### Autonomous Flight with Drone
 
 #### with ICP Odometry
-![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/lit_w_additional_feats.png)  
+![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/icp.png)  
 
 #### with RGBD Odometry
-![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/dark_w_min_feats.png)  
+![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/rgbd.png)  
 
 ## ICP Odometry vs RGBD Odometry
 
