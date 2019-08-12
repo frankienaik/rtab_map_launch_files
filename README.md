@@ -5,6 +5,8 @@ Above is the RTAB-Map launch files used to integrate the RPLidar and the Realsen
 P.S. : The topics (of the LIDAR and RGBD Camera) SHOULD be changed if LIDAR model and RGBD Camera model is different. Instructions below only took into account my hardwares.
 
 ## RTAB-Map slight explanation
+![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/2d_3d.png)
+This image is taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf. It shows the block diagram of the ROS RTAB-Map node.
 
 
 
@@ -61,9 +63,14 @@ The output of the RTAB-Map in different conditions are as shown below:
 - Capable of 6DOF (x, y, z, roll, pitch, yaw), resulting in a mapping in the x-y-z plane.
 - Very feature dependent.
 
-#### ICP Odometry is more reliable and robust as compared to RGBD Odometry. It does not lose its odometry easily and is potentially able to map the x-y-z plane with a 3D LIDAR.
+#### ICP Odometry is more reliable and robust as compared to RGBD Odometry. It does not lose its odometry easily and is potentially able to map the x-y-z plane with a 3D LIDAR depending on the parameters. This is shown in the image below depicting the local occupancy grid creation. Grid/3D is automatically set to false if it is a 2D LIDAR.
+![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/2d_3d.png)
+This image is taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf. It depicst the local occupancy grid creation. Depending on the parameters and availability of the optional laser scan and point cloud inputs, the local occupancy grid can either be 2D or 3D.
 
-
+#### Without a 2D LIDAR, I would still recommend ICP Odometry to conduct the mapping. However, the RTAB-Map have to be restarted at every level of inspection where altitude changes. With this, we can manually input the height or altitude of which the drone is at, allowing it to map at that z height. The different session maps would then be stiched together as shown in the images below.
+![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/multi_session_mapping_1.png)
+![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/multi_session_mapping_2.png)
+The images are taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf. It depicts how the map would be joined together for 5 different sessions.
 
 ## Important Variables in RTAB-Map
 - rgb/image
@@ -92,6 +99,8 @@ The output of the RTAB-Map in different conditions are as shown below:
 ```
 
 2) icp_odometry
+![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/icp_odometry.png)
+This image is taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf. It depicst the block diagram for icp_odometry. Two odometry approaches can be used: Scan-To-Scan or Scan-To-Map.
 ```
 <node pkg="rtabmap_ros" type="icp_odometry" name="icp_odometry" output="screen" >
 
@@ -138,6 +147,8 @@ Parameters in here can be changed. Important variables are these:
 ```
 
 3) rgbd_odometry
+![alt text](https://github.com/frankienaik/rtab_map_launch_files/blob/master/capstone/rgbd_odometry.png)
+This image is taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/images/7/7a/Labbe18JFR_preprint.pdf. It depicst the block diagram for rgbd_odometry and stereo_odometry. Two odometry approaches can be used: Frame-To-Frame or Frame-To-Map.
 ```
 <node pkg="rtabmap_ros" type="rgbd_odometry" name="rgbd_odometry" output="$(arg output)" args="$(arg rtabmap_args) $(arg odom_args)" launch-prefix="$(arg launch_prefix)">
           <remap from="rgb/image"       to="$(arg rgb_topic_relay)"/>
