@@ -86,7 +86,7 @@ This image is taken from https://introlab.3it.usherbrooke.ca/mediawiki-introlab/
 - odom_info
 - frame_id
 
-## Important Nodes in RTAB-Map Node
+## Important Nodes in RTAB-Map ROS
 1) rgbd_sync
 ```
 <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
@@ -190,6 +190,7 @@ Parameters in here can be changed. Important variables are these:
 Do note that suggestions here are based off my blackbox understanding of the crack detection software.
 1) Create a python script that reads the video and rewrite the data when a crack is detected. As it is a RGB-D data, we can increase the R value such that a red bounding box can be created. (It is not easy but it is a suggestion)
 2) On the flight path, we can change the data color to allow the user to know where a crack was detected.
+3) ICP Odometry with a 3D LIDAR. (as mentioned above)
 
 ## Related & Useful Links
 1) RTAB-Map parameters https://github.com/introlab/rtabmap/blob/master/corelib/include/rtabmap/core/Parameters.h and http://wiki.ros.org/rtabmap_ros 
